@@ -1,0 +1,47 @@
+_format_version: "3.0"
+
+services:
+  - name: gateway-info
+    url: http://127.0.0.1:1
+    routes:
+      - name: root-route
+        paths:
+          - /
+        plugins:
+          - name: request-termination
+            config:
+              status_code: 200
+              content_type: application/json
+              body: '{"gateway":"Kong","routes":["/auth/health","/users/health","/inventory/health","/analytics/health","/users","/inventory","/analytics","POST /auth/login"]}'
+
+  - name: auth-service
+    url: http://auth-service:8080
+    routes:
+      - name: auth-route
+        paths:
+          - /auth
+        strip_path: true
+
+  - name: user-service
+    url: http://user-service:3000
+    routes:
+      - name: user-route
+        paths:
+          - /users
+        strip_path: true
+
+  - name: inventory-service
+    url: http://inventory-service:3001
+    routes:
+      - name: inventory-route
+        paths:
+          - /inventory
+        strip_path: true
+
+  - name: analytics-service
+    url: http://analytics-service:8000
+    routes:
+      - name: analytics-route
+        paths:
+          - /analytics
+        strip_path: true

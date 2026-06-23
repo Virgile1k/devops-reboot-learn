@@ -1,0 +1,19 @@
+# HTTP monitors for Uptime Kuma (via Docker network app-network).
+# Seed with: scripts/seed-uptime-kuma.py
+monitors:
+  - name: Kong / Auth
+    url: http://kong:8000/auth/health
+  - name: Kong / Users
+    url: http://kong:8000/users/health
+  - name: Kong / Inventory
+    url: http://kong:8000/inventory/health
+  - name: Kong / Analytics
+    url: http://kong:8000/analytics/health
+  - name: Auth Service (direct)
+    url: http://auth-service:8080/health
+  - name: User Service (direct)
+    url: http://user-service:3000/health
+  - name: Inventory Service (direct)
+    url: http://inventory-service:3001/health
+  - name: Analytics Service (direct)
+    url: http://analytics-service:8000/health

@@ -1,0 +1,34 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: [localhost:9090]
+
+  - job_name: cadvisor
+    static_configs:
+      - targets: [cadvisor:8080]
+
+  - job_name: blackbox-http
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+          - http://kong:8000/auth/health
+          - http://kong:8000/users/health
+          - http://kong:8000/inventory/health
+          - http://kong:8000/analytics/health
+          - http://auth-service:8080/health
+          - http://user-service:3000/health
+          - http://inventory-service:3001/health
+          - http://analytics-service:8000/health
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
